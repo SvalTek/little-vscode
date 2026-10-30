@@ -1,0 +1,92 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Little",
+  "scopeName": "source.little",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#constants" },
+    { "include": "#builtins" },
+    { "include": "#receiver-shorthand" },
+    { "include": "#identifiers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.semicolon.little",
+          "match": ";.*$"
+        }
+      ]
+    },
+    "strings": {
+      "name": "string.quoted.double.little",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.little",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.little",
+          "match": "\\b0[xX][0-9a-fA-F]+\\b|\\b0[bB][01]+\\b|\\b\\d+(\\.\\d+)?([eE][+-]?\\d+)?\\b"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.little",
+          "match": "\\b(if|else|elseif|for|in|while|with|break|return|import|await|async)\\b"
+        },
+        {
+          "name": "storage.type.little",
+          "match": "\\b(var|global|fn|class|extends|constructor|get|set|public|private|override|super)\\b"
+        },
+        {
+          "name": "keyword.operator.word.little",
+          "match": "\\b(is|isnt|and|or|not|type|typeof)\\b"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.little",
+          "match": "\\b(true|false|null)\\b"
+        }
+      ]
+    },
+    "builtins": {
+      "patterns": [
+        {
+          "name": "support.function.little",
+          "match": "\\b(io|string|array|table|math|number|bit|json|gc|web|ws|term|module|pcall|unpack|task|timer)\\b"
+        }
+      ]
+    },
+    "receiver-shorthand": {
+      "patterns": [
+        {
+          "name": "variable.parameter.receiver.little",
+          "match": "@[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "name": "variable.other.little",
+          "match": "[A-Za-z_][A-Za-z0-9_]*"
+        }
+      ]
+    }
+  }
+}
