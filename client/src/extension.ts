@@ -8,11 +8,11 @@ import {
 
 let client: LanguageClient | undefined;
 
-export function activate(context: ExtensionContext) {
+export async function activate(context: ExtensionContext) {
   // The language server is a separate executable built from little-ls. Use the
   // setting when developing against a local build, otherwise resolve it from PATH.
   const configured = (workspace.getConfiguration("little").get<string>("server.path") ?? "").trim();
-  const command = configured.length > 0 ? configured : "little-ls";
+  const command = configured.length > 0 ? configured : process.env.LITTLE_LS_PATH || "little-ls";
 
   const serverOptions: ServerOptions = {
     command,
@@ -26,7 +26,7 @@ export function activate(context: ExtensionContext) {
   };
 
   client = new LanguageClient("little", "Little Language Server", serverOptions, clientOptions);
-  client.start();
+  await client.start();
 }
 
 export function deactivate(): Thenable<void> | undefined {

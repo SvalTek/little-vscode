@@ -43,7 +43,7 @@
         "little.server.path": {
           "type": "string",
           "default": "",
-          "description": "Path to the little-ls executable. When empty, `little-ls` is resolved from PATH."
+          "description": "Path to the little-ls executable. When empty, LITTLE_LS_PATH or `little-ls` on PATH is used."
         }
       }
     }
@@ -52,10 +52,16 @@
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
+    "package": "npm run compile && node -e \"require('node:fs').mkdirSync('out',{recursive:true})\" && vsce package --out out/little-vscode.vsix",
+    "test": "npm run compile && vscode-test",
     "postinstall": "cd client && npm install"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
     "@types/node": "^20.5.7",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.9.2",
     "typescript": "^5.2.2"
   }
 }
