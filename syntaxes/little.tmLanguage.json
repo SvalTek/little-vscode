@@ -16,8 +16,27 @@
     "comments": {
       "patterns": [
         {
+          "name": "comment.line.documentation.little",
+          "begin": ";;",
+          "end": "$",
+          "patterns": [
+            { "include": "#doc-annotations" }
+          ]
+        },
+        {
           "name": "comment.line.semicolon.little",
           "match": ";.*$"
+        }
+      ]
+    },
+    "doc-annotations": {
+      "patterns": [
+        {
+          "match": "(@)(param|return|field|class|struct|type|generic)\\b",
+          "captures": {
+            "1": { "name": "punctuation.definition.annotation.little" },
+            "2": { "name": "entity.name.tag.annotation.little" }
+          }
         }
       ]
     },
