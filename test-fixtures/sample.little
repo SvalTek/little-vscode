@@ -1,3 +1,5 @@
+;; A point in 2D.
+;; @field number x the horizontal position
 class Point {
   x
   length() {

@@ -110,4 +110,25 @@ suite("Little language", () => {
       ]
     );
   });
+
+  test("shows documentation on hover", async () => {
+    const uri = fixture("sample.little");
+    await open(uri);
+
+    const hovers = await vscode.commands.executeCommand<vscode.Hover[]>(
+      "vscode.executeHoverProvider",
+      uri,
+      new vscode.Position(2, 6)
+    );
+    assert.ok(hovers && hovers.length > 0, "no hover was returned");
+
+    const contents = hovers
+      .flatMap((hover) => hover.contents)
+      .map((content) => (typeof content === "string" ? content : content.value))
+      .join("\n");
+
+    assert.match(contents, /class Point/);
+    assert.match(contents, /A point in 2D/);
+    assert.match(contents, /the horizontal position/);
+  });
 });
