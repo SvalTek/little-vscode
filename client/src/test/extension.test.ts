@@ -1,17 +1,37 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
 
+/**
+ * Resolves a fixture file inside the opened test workspace.
+ *
+ * @param name File name inside the workspace folder.
+ * @returns The URI of the fixture.
+ */
 function fixture(name: string): vscode.Uri {
   const folder = vscode.workspace.workspaceFolders;
   assert.ok(folder && folder.length > 0, "expected a workspace folder");
   return vscode.Uri.joinPath(folder[0].uri, name);
 }
 
+/**
+ * Opens a document and shows it in an editor so providers can run.
+ *
+ * @param uri Document to open.
+ * @returns The active editor for the document.
+ */
 async function open(uri: vscode.Uri): Promise<vscode.TextEditor> {
   const document = await vscode.workspace.openTextDocument(uri);
   return vscode.window.showTextDocument(document);
 }
 
+/**
+ * Waits until the diagnostics for a document satisfy a predicate.
+ *
+ * @param uri Document whose diagnostics are observed.
+ * @param predicate Check applied to the current diagnostics.
+ * @param timeout Maximum wait in milliseconds.
+ * @returns The diagnostics that satisfied the predicate.
+ */
 function waitForDiagnostics(
   uri: vscode.Uri,
   predicate: (diagnostics: vscode.Diagnostic[]) => boolean,
@@ -43,6 +63,12 @@ function waitForDiagnostics(
   });
 }
 
+/**
+ * Activates the extension and asks VS Code for a document's symbols.
+ *
+ * @param uri Document to inspect.
+ * @returns The symbols reported by the language server.
+ */
 async function documentSymbols(uri: vscode.Uri): Promise<vscode.DocumentSymbol[]> {
   // Activation awaits client.start(), so the provider is registered once this
   // resolves; no polling or timers are needed.
