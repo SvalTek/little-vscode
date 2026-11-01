@@ -1,29 +1,67 @@
 {
-  "name": "REPLACE_ME",
-  "description": "REPLACE_ME",
-  "author": "REPLACE_ME",
+  "name": "little-vscode",
+  "displayName": "Little",
+  "description": "Little language support for VS Code",
+  "author": "SvalTek",
   "license": "MIT",
-  "version": "1.0.0",
-  "publisher": "REPLACE_ME",
-  "categories": [],
+  "version": "0.1.0",
+  "publisher": "SvalTek",
+  "categories": [
+    "Programming Languages"
+  ],
   "engines": {
     "vscode": "^1.75.0"
   },
   "activationEvents": [
-    "onLanguage"
+    "onLanguage:little"
   ],
   "main": "./client/out/extension",
   "contributes": {
-    "configuration": {}
+    "languages": [
+      {
+        "id": "little",
+        "aliases": [
+          "Little",
+          "little"
+        ],
+        "extensions": [
+          ".little"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "little",
+        "scopeName": "source.little",
+        "path": "./syntaxes/little.tmLanguage.json"
+      }
+    ],
+    "configuration": {
+      "title": "Little",
+      "properties": {
+        "little.server.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the little-ls executable. When empty, LITTLE_LS_PATH or `little-ls` on PATH is used."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -b",
     "watch": "tsc -b -w",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+    "package": "npm run compile && node -e \"require('node:fs').mkdirSync('out',{recursive:true})\" && vsce package --out out/little-vscode.vsix",
+    "test": "npm run compile && vscode-test",
+    "postinstall": "cd client && npm install"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
     "@types/node": "^20.5.7",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^3.9.2",
     "typescript": "^5.2.2"
   }
 }

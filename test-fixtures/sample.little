@@ -1,0 +1,13 @@
+;; A point in 2D.
+;; @field number x the horizontal position
+class Point {
+  x
+  length() {
+    return 1
+  }
+}
+
+fn main() {
+  var point = Point()
+  return point:length()
+}

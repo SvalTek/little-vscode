@@ -1,14 +1,10 @@
 {
-  "name": "REPLACE_ME",
-  "description": "REPLACE_ME",
-  "author": "REPLACE_ME",
+  "name": "little-vscode-client",
+  "description": "VS Code client for the Little language server",
+  "author": "SvalTek",
   "license": "MIT",
-  "version": "0.0.1",
-  "publisher": "REPLACE_ME",
-  "repository": {
-    "type": "git",
-    "url": "REPLACE_ME"
-  },
+  "version": "0.1.0",
+  "publisher": "SvalTek",
   "engines": {
     "vscode": "^1.75.0"
   },
