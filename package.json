@@ -44,6 +44,11 @@
           "type": "string",
           "default": "",
           "description": "Path to the little-ls executable. When empty, LITTLE_LS_PATH or `little-ls` on PATH is used."
+        },
+        "little.diagnostics.inline": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Little errors and warnings at the end of their source lines."
         }
       }
     }

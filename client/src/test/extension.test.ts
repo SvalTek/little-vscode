@@ -1,5 +1,6 @@
 import * as assert from "assert";
 import * as vscode from "vscode";
+import { inlineDecorations, inlineDiagnostics } from "../inlineDiagnostics";
 
 /**
  * Resolves a fixture file inside the opened test workspace.
@@ -83,6 +84,35 @@ async function documentSymbols(uri: vscode.Uri): Promise<vscode.DocumentSymbol[]
 }
 
 suite("Little language", () => {
+  test("groups inline errors and warnings by line", () => {
+    const diagnostic = (line: number, severity: vscode.DiagnosticSeverity, message: string, source = "little") => {
+      const result = new vscode.Diagnostic(new vscode.Range(line, 0, line, 1), message, severity);
+      result.source = source;
+      return result;
+    };
+    const result = inlineDiagnostics([
+      diagnostic(1, vscode.DiagnosticSeverity.Warning, "Warning detail"),
+      diagnostic(1, vscode.DiagnosticSeverity.Error, "Error detail\nMore information"),
+      diagnostic(2, vscode.DiagnosticSeverity.Warning, "Other warning"),
+      diagnostic(3, vscode.DiagnosticSeverity.Information, "Information"),
+      diagnostic(4, vscode.DiagnosticSeverity.Error, "Other extension", "other"),
+    ]);
+    assert.deepStrictEqual(result.map(({ line, severity, message }) => ({ line, severity, message })), [
+      { line: 1, severity: vscode.DiagnosticSeverity.Error, message: "Error detail (+1)" },
+      { line: 2, severity: vscode.DiagnosticSeverity.Warning, message: "Other warning" },
+    ]);
+    assert.match(result[0].hover, /More information/);
+    assert.deepStrictEqual(inlineDiagnostics([]), []);
+  });
+  test("keeps diagnostics anchored on an empty final line", async () => {
+    const document = await vscode.workspace.openTextDocument({ language: "little", content: "var x = 1\n" });
+    const diagnostic = new vscode.Diagnostic(new vscode.Range(1, 0, 1, 0), "Expected expression", vscode.DiagnosticSeverity.Error);
+    diagnostic.source = "little";
+    const decorations = inlineDecorations(document, [diagnostic]);
+    assert.strictEqual(decorations.errors.length, 1);
+    assert.ok(decorations.errors[0].range.isEqual(document.lineAt(1).range));
+    assert.match(decorations.errors[0].renderOptions?.after?.contentText ?? "", /Expected expression/);
+  });
   test("reports parse diagnostics with source ranges", async () => {
     const uri = fixture("broken.little");
     const editor = await open(uri);
@@ -97,6 +127,12 @@ suite("Little language", () => {
     assert.strictEqual(diagnostics[0].range.start.line, 0);
     assert.strictEqual(diagnostics[0].range.start.character, 4);
     assert.strictEqual(diagnostics[0].range.end.character, 5);
+    const decorations = inlineDecorations(editor.document, diagnostics);
+    assert.strictEqual(decorations.errors.length, 1);
+    assert.ok(decorations.errors[0].range.isEqual(editor.document.lineAt(0).range));
+    assert.ok(!decorations.errors[0].range.isEmpty);
+    assert.match(decorations.errors[0].renderOptions?.after?.contentText ?? "", /Expected identifier/);
+    assert.deepStrictEqual(inlineDecorations(editor.document, []).errors, []);
   });
 
   test("clears diagnostics after the source is fixed", async () => {

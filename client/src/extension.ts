@@ -1,4 +1,5 @@
 import { workspace, ExtensionContext } from "vscode";
+import { registerInlineDiagnostics } from "./inlineDiagnostics";
 import {
   LanguageClient,
   LanguageClientOptions,
@@ -17,6 +18,7 @@ let client: LanguageClient | undefined;
  * @param context Extension context supplied by VS Code.
  */
 export async function activate(context: ExtensionContext) {
+  registerInlineDiagnostics(context);
   // The language server is a separate executable built from little-ls. Use the
   // setting when developing against a local build, otherwise resolve it from PATH.
   const configured = (workspace.getConfiguration("little").get<string>("server.path") ?? "").trim();

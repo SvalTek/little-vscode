@@ -10,7 +10,8 @@ parsing and analysis stay in `little-ls`. The server is not bundled.
 
 - Syntax highlighting for `.little` files, including `;;` doc-comment
   annotations.
-- Diagnostics as you type, with exact source ranges.
+- Diagnostics as you type, with exact source ranges and optional highlighted
+  lines with error or warning messages at the end.
 - Hover with signatures, inferred types, and doc-comment details (`@param`,
   `@return`, `@field`, `@class`).
 - Go to definition, find references, document highlights, and rename.
@@ -54,6 +55,7 @@ code --install-extension out/little-vscode.vsix
 | setting | default | description |
 |---|---|---|
 | `little.server.path` | `""` | Path to the `little-ls` executable. When empty, `LITTLE_LS_PATH` or `little-ls` on `PATH` is used. |
+| `little.diagnostics.inline` | `true` | Highlight lines with Little errors or warnings and show the diagnostic at the end of the line. |
 
 ## Developing
 
