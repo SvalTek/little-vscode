@@ -36,9 +36,10 @@ export function inlineDecorations(document: vscode.TextDocument, diagnostics: re
   const warnings: vscode.DecorationOptions[] = [];
   for (const diagnostic of inlineDiagnostics(diagnostics)) {
     if (diagnostic.line >= document.lineCount) continue;
-    const end = document.lineAt(diagnostic.line).range.end;
+    const line = document.lineAt(diagnostic.line);
     const decoration: vscode.DecorationOptions = {
-      range: new vscode.Range(end, end),
+      // Empty lines, including an empty document, have no non-empty line range.
+      range: line.range,
       hoverMessage: new vscode.MarkdownString().appendText(diagnostic.hover),
       renderOptions: { after: { contentText: `${diagnostic.severity === vscode.DiagnosticSeverity.Error ? "✖" : "⚠"} ${diagnostic.message}` } },
     };
